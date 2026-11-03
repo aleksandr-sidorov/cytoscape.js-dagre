@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<title>Live layout</title>
+<link rel="icon" href="data:,">
+<style>
+  body { font: 14px system-ui, sans-serif; margin: 12px; }
+  h2 { font-size: 18px; }
+  #diagram { position: relative; }
+  #graph { width: 300px; height: 280px; margin-left: 54px; }
+  .level-label { position: absolute; left: 0; transform: translateY(-50%); color: #555; font-size: 11px; }
+  #result { white-space: pre-line; }
+  #result { padding: 8px; background: #ffe5e5; }
+  #result.pass { background: #e4f5e7; }
+</style>
+<h2 id="title">Loading</h2>
+<div id="diagram">
+  <div id="graph"></div>
+  <span class="level-label" data-level="1">Root<br>Level 1</span>
+  <span class="level-label" data-level="2">Children<br>Level 2</span>
+  <span class="level-label" data-level="3">Leaves<br>Level 3</span>
+</div>
+<p id="result">Waiting for layout</p>
+<script type="module">
+  import { cases, createElements, layoutOptions, style, summarize } from './fixture.mjs';
+  const result = document.querySelector('#result');
+  function loadScript(source) {
+    return new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = source;
+      script.onload = resolve;
+      script.onerror = () => reject(new Error(`Cannot load ${source}`));
+      document.head.append(script);
+    });
+  }
+  try {
+    const scenario = cases.find(candidate => candidate.mode === new URLSearchParams(location.search).get('mode'));
+    if (!scenario) throw new Error('Unknown reproduction mode');
+    document.querySelector('#title').textContent = scenario.title;
+    await loadScript('vendor/cytoscape-3.34.0.min.js');
+    if (scenario.mode === 'legacy') await loadScript('vendor/dagre-0.8.5.min.js');
+    const wrapperPath = scenario.mode === 'legacy' ? 'cytoscape-dagre-2.5.0.js' : 'cytoscape-dagre-4.0.1.js';
+    await loadScript(`vendor/${wrapperPath}`);
+    const cy = window.cytoscape({ container: document.querySelector('#graph'), elements: createElements(), style });
+    cy.layout(layoutOptions(scenario.mode)).run();
+    const summary = summarize(cy, scenario, window.cytoscape.version);
+    cy.fit(cy.elements(), 24);
+    for (const level of summary.levels) {
+      document.querySelector(`[data-level="${level.level}"]`).style.top = `${cy.getElementById(level.nodes[0].id).renderedPosition().y}px`;
+    }
+    result.textContent = `${summary.matchesExpected ? 'Observed' : 'UNEXPECTED'} (left → right)\n`
+      + summary.levels.map(level => `Level ${level.level}: ${level.order}`).join('\n');
+    result.className = summary.matchesExpected ? 'pass' : '';
+    parent.postMessage(summary, location.origin);
+    window.addEventListener('pagehide', () => cy.destroy(), { once: true });
+  } catch (exception) {
+    result.textContent = `ERROR: ${exception.message}`;
+    parent.postMessage({ error: exception.message }, location.origin);
+  }
+</script>
+</html>

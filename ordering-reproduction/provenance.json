@@ -1,0 +1,164 @@
+{
+  "source": "https://github.com/aleksandr-sidorov/cytoscape.js-dagre/tree/reproduce-ordering-change/reproduction/ordering-change",
+  "notes": [
+    "Vendor assets are byte-for-byte copies of the locked published packages, not rebuilt or patched.",
+    "The 4.0.1 npm package ships a wrapper banner saying 4.0.0; package metadata and tarball integrity identify 4.0.1.",
+    "Dagre 0.8.5 browser bundle embeds Graphlib and Lodash. Node overrides do not change embedded browser code.",
+    "Graphlib 2.1.8 is verified through the browser bundle global. Lodash module code has no version banner; its historical 4.17.11 MIT notice is included, not the Node 4.18.1 notice.",
+    "Historical embedded Lodash can have known security defects. This demo uses only a fixed trusted fixture, without user graph input, uploads, or application integration. Do not reuse these legacy bundles in an application.",
+    "The 4.0.1 wrapper bundles @dagrejs/dagre 3.0.0 and @dagrejs/graphlib 4.0.1. Both use the Chris Pettitt MIT text in licenses/dagre.esm.js.LEGAL.txt; component entries link their public notice sources."
+  ],
+  "assets": [
+    {
+      "package": "cytoscape",
+      "alias": "cytoscape",
+      "version": "3.34.0",
+      "packagePath": "dist/cytoscape.min.js",
+      "path": "vendor/cytoscape-3.34.0.min.js",
+      "bytes": 435328,
+      "license": "MIT",
+      "licensePath": "licenses/cytoscape-LICENSE.txt",
+      "source": "https://registry.npmjs.org/cytoscape/-/cytoscape-3.34.0.tgz",
+      "tarballIntegrity": "sha512-62rNSrioXw93uliKFBwjukeQyeWwH2PqDrTac31r2P6464u3AUvTk0xS4LVvT251g7IgkFunrI48ZEZGjywSOg==",
+      "publishedAsset": "https://unpkg.com/cytoscape@3.34.0/dist/cytoscape.min.js",
+      "sha256": "9c2a3bf2592e0b14a1f7bec07c03a54f16dedf32af9cd0af155c716aa6c87bc3"
+    },
+    {
+      "package": "dagre",
+      "alias": "dagre",
+      "version": "0.8.5",
+      "packagePath": "dist/dagre.min.js",
+      "path": "vendor/dagre-0.8.5.min.js",
+      "bytes": 283803,
+      "license": "MIT",
+      "licensePath": "licenses/dagre-LICENSE.txt",
+      "source": "https://registry.npmjs.org/dagre/-/dagre-0.8.5.tgz",
+      "tarballIntegrity": "sha512-/aTqmnRta7x7MCCpExk7HQL2O4owCT2h8NT//9I1OQ9vt29Pa0BzSAkR5lwFUcQ7491yVi/3CXU9jQ5o0Mn2Sw==",
+      "publishedAsset": "https://unpkg.com/dagre@0.8.5/dist/dagre.min.js",
+      "sha256": "62eb9787ccfdbdf4148d4d99d31dbf9ee4770eafee81e637d759b52aac22cd51",
+      "embedded": [
+        {
+          "package": "graphlib",
+          "version": "2.1.8",
+          "evidence": "Browser global dagre.graphlib.version",
+          "license": "MIT",
+          "licensePath": "licenses/graphlib-LICENSE.txt",
+          "licenseSource": "https://unpkg.com/graphlib@2.1.8/LICENSE"
+        },
+        {
+          "package": "lodash",
+          "version": null,
+          "evidence": "Individual Lodash modules have no embedded version banner; Node override is not the browser version.",
+          "license": "MIT",
+          "licensePath": "licenses/lodash-legacy-MIT.txt",
+          "licenseSource": "https://unpkg.com/lodash@4.17.11/LICENSE"
+        }
+      ]
+    },
+    {
+      "package": "cytoscape-dagre",
+      "alias": "dagre-legacy",
+      "version": "2.5.0",
+      "packagePath": "cytoscape-dagre.js",
+      "path": "vendor/cytoscape-dagre-2.5.0.js",
+      "bytes": 12665,
+      "license": "MIT",
+      "licensePath": "licenses/dagre-legacy-LICENSE.txt",
+      "source": "https://registry.npmjs.org/cytoscape-dagre/-/cytoscape-dagre-2.5.0.tgz",
+      "tarballIntegrity": "sha512-VG2Knemmshop4kh5fpLO27rYcyUaaDkRw+6PiX4bstpB+QFt0p2oauMrsjVbUamGWQ6YNavh7x2em2uZlzV44g==",
+      "publishedAsset": "https://unpkg.com/cytoscape-dagre@2.5.0/cytoscape-dagre.js",
+      "sha256": "bf70fe402991dcbff33e05a7e4a5271c78020bb75e85d1c80ab7538e4157112e"
+    },
+    {
+      "package": "cytoscape-dagre",
+      "alias": "dagre-current",
+      "version": "4.0.1",
+      "packagePath": "dist/cytoscape-dagre.js",
+      "path": "vendor/cytoscape-dagre-4.0.1.js",
+      "bytes": 57231,
+      "license": "MIT",
+      "licensePath": "licenses/dagre-current-LICENSE.txt",
+      "source": "https://registry.npmjs.org/cytoscape-dagre/-/cytoscape-dagre-4.0.1.tgz",
+      "tarballIntegrity": "sha512-hyNdh8Vp1nwzBcjHnM4c71G81bFhPmQYLXD2HM9AZIvl+8TrMzWEOPW45hF/XOBQiEguPcDQzi6VrXR1XBcXOA==",
+      "publishedAsset": "https://unpkg.com/cytoscape-dagre@4.0.1/dist/cytoscape-dagre.js",
+      "sha256": "d7ce98b7addb74a53df03b58c743266b6abd3d85b0e428d255e9285cde3de8c0",
+      "embedded": [
+        {
+          "package": "@dagrejs/dagre",
+          "version": "3.0.0",
+          "license": "MIT",
+          "licensePath": "licenses/dagre.esm.js.LEGAL.txt",
+          "licenseSource": "https://unpkg.com/@dagrejs/dagre@3.0.0/dist/dagre.esm.js.LEGAL.txt"
+        },
+        {
+          "package": "@dagrejs/graphlib",
+          "version": "4.0.1",
+          "license": "MIT",
+          "evidence": "Embedded Graphlib version literal and @dagrejs/dagre 3.0.0 published dependency metadata",
+          "source": "https://unpkg.com/@dagrejs/dagre@3.0.0/package.json",
+          "licensePath": "licenses/dagre.esm.js.LEGAL.txt",
+          "licenseSource": "https://unpkg.com/@dagrejs/graphlib@4.0.1/LICENSE"
+        }
+      ]
+    }
+  ],
+  "licenses": [
+    {
+      "package": "cytoscape",
+      "version": "3.34.0",
+      "license": "MIT",
+      "path": "licenses/cytoscape-LICENSE.txt",
+      "source": "https://registry.npmjs.org/cytoscape/-/cytoscape-3.34.0.tgz",
+      "sha256": "eb319c6e6f233607f71e8e2f450391751883cfc0eeb3ca7ef574c13d1d9c2203"
+    },
+    {
+      "package": "dagre",
+      "version": "0.8.5",
+      "license": "MIT",
+      "path": "licenses/dagre-LICENSE.txt",
+      "source": "https://registry.npmjs.org/dagre/-/dagre-0.8.5.tgz",
+      "sha256": "6a349742a6cb219d5a2fc8d0844f6d89a6efc62e20c664450d884fc7ff2d6015"
+    },
+    {
+      "package": "cytoscape-dagre",
+      "version": "2.5.0",
+      "license": "MIT",
+      "path": "licenses/dagre-legacy-LICENSE.txt",
+      "source": "https://registry.npmjs.org/cytoscape-dagre/-/cytoscape-dagre-2.5.0.tgz",
+      "sha256": "fccef1f60ab551f032291912d77bb9e8cd98b99bd1cffe185062ac7216a36d5e"
+    },
+    {
+      "package": "cytoscape-dagre",
+      "version": "4.0.1",
+      "license": "MIT",
+      "path": "licenses/dagre-current-LICENSE.txt",
+      "source": "https://registry.npmjs.org/cytoscape-dagre/-/cytoscape-dagre-4.0.1.tgz",
+      "sha256": "c8f8d9008103872d6686927c1646c9267726c1f1c44a8f625399325b6d190837"
+    },
+    {
+      "package": "graphlib",
+      "version": "2.1.8",
+      "license": "MIT",
+      "path": "licenses/graphlib-LICENSE.txt",
+      "source": "https://registry.npmjs.org/graphlib/-/graphlib-2.1.8.tgz",
+      "sha256": "6a349742a6cb219d5a2fc8d0844f6d89a6efc62e20c664450d884fc7ff2d6015"
+    },
+    {
+      "package": "lodash",
+      "version": null,
+      "noticeVersion": "4.17.11",
+      "license": "MIT",
+      "path": "licenses/lodash-legacy-MIT.txt",
+      "source": "https://unpkg.com/lodash@4.17.11/LICENSE",
+      "sha256": "e159c6d48c989185448658f276375bfb2300362ec6d4ae5525a2d49c4bcb947d"
+    },
+    {
+      "package": "@dagrejs/dagre",
+      "version": "3.0.0",
+      "license": "MIT",
+      "path": "licenses/dagre.esm.js.LEGAL.txt",
+      "source": "https://unpkg.com/@dagrejs/dagre@3.0.0/dist/dagre.esm.js.LEGAL.txt",
+      "sha256": "9148bffb1e84382a8b6668eeb2b53c6a554341d714fba129856ea5eb350d35f3"
+    }
+  ]
+}

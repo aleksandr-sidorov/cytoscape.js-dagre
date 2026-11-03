@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>cytoscape-dagre: three-level mirror comparison</title>
+<link rel="icon" href="data:,">
+<style>
+  body { font: 16px system-ui, sans-serif; margin: 24px; color: #222; }
+  h1 { font-size: 24px; }
+  main { display: flex; flex-wrap: wrap; gap: 16px; }
+  iframe { width: 380px; height: 450px; border: 1px solid #aaa; }
+  #status { padding: 12px; background: #ffe5e5; }
+  #status.pass { background: #e4f5e7; }
+</style>
+<h1>Same three-level tree, mirrored horizontal placement</h1>
+<p>8 nodes, 7 edges. Root R → 1, 2, 3; branch 1 → 1.1, 1.2; branch 2 → 2.1; branch 3 → 3.1.</p>
+<p>Cytoscape.js 3.34.0. Published, unmodified wrappers. Blue = branch 1; orange = branch 2; green = branch 3.</p>
+<p id="status" role="status">Waiting for live layouts. Missing panels or errors do not count as reproduction.</p>
+<main>
+  <iframe title="2.5.0 default" src="panel.html?mode=legacy"></iframe>
+  <iframe title="4.0.1 default" src="panel.html?mode=current"></iframe>
+  <iframe title="4.0.1 + explicit input sorting" src="panel.html?mode=sorted"></iframe>
+</main>
+<p>These are live layouts in isolated frames, not recorded coordinates. Labels sit outside 20 × 20 nodes.</p>
+<p>Nodes and edges are passed to Dagre in a fixed order. Dagre can still change their final left-to-right positions.</p>
+<p><a href="https://github.com/aleksandr-sidorov/cytoscape.js-dagre/tree/reproduce-ordering-change/reproduction/ordering-change">Source, headless reproduction, and README</a></p>
+<p><a href="provenance.json">Published asset versions, SHA-256 hashes, and license notices</a></p>
+<script type="module">
+  import { cases, comparisonMatches } from './fixture.mjs';
+  const results = new Map();
+  const frames = [...document.querySelectorAll('iframe')];
+  const status = document.querySelector('#status');
+  window.addEventListener('message', event => {
+    const index = frames.findIndex(frame => frame.contentWindow === event.source);
+    if (event.origin !== location.origin || index === -1) return;
+    if (event.data.error) {
+      status.className = '';
+      status.textContent = `ERROR: ${event.data.error}`;
+      results.set(cases[index].mode, null);
+      return;
+    }
+    results.set(cases[index].mode, event.data);
+    if (results.size !== cases.length) return;
+    const values = cases.map(scenario => results.get(scenario.mode));
+    const reproduced = comparisonMatches(values);
+    status.className = reproduced ? 'pass' : '';
+    status.textContent = reproduced
+      ? 'REPRODUCED: all 8 nodes mirror across x = 115; all y-coordinates stay unchanged. Explicit input sorting matches 4.0.1 default.'
+      : 'UNEXPECTED RESULT: this run does not reproduce the recorded comparison.';
+  });
+</script>
+</html>
