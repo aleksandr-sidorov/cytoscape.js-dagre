@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Live layout</title>
+    <link rel="icon" href="data:," />
+    <style>
+      body {
+        margin: 16px;
+        font: 14px system-ui, sans-serif;
+        color: #222;
+      }
+
+      h2 {
+        margin: 0;
+        font-size: 17px;
+      }
+
+      #graph {
+        height: 280px;
+      }
+
+      #message {
+        color: #555;
+      }
+    </style>
+  </head>
+  <body>
+    <h2 id="title">Live layout</h2>
+    <div id="graph" role="img" aria-label="Three-level tree rooted at R"></div>
+    <p id="message" role="status">Loading libraries…</p>
+    <noscript>Enable JavaScript to view the graph.</noscript>
+    <script src="https://cdn.jsdelivr.net/npm/cytoscape@3.34.0/dist/cytoscape.min.js"></script>
+    <script>
+      const mode = new URLSearchParams(location.search).get("mode");
+      const titles = {
+        legacy: "2.5.0 — default",
+        current: "4.0.1 — default",
+        sorted: "4.0.1 — explicit input sorting",
+      };
+      const message = document.querySelector("#message");
+
+      function loadScript(source) {
+        return new Promise((resolve, reject) => {
+          const script = document.createElement("script");
+          script.src = `https://cdn.jsdelivr.net/npm/${source}`;
+          script.onload = resolve;
+          script.onerror = reject;
+          document.head.append(script);
+        });
+      }
+
+      async function showGraph() {
+        if (!Object.hasOwn(titles, mode)) {
+          message.textContent = "Invalid mode. Choose legacy, current, or sorted.";
+          return;
+        }
+
+        document.querySelector("#title").textContent = titles[mode];
+        if (mode === "legacy") {
+          await loadScript("dagre@0.8.5/dist/dagre.min.js");
+        }
+        const plugin = mode === "legacy"
+          ? "cytoscape-dagre@2.5.0/cytoscape-dagre.js"
+          : "cytoscape-dagre@4.0.1/dist/cytoscape-dagre.js";
+        await loadScript(plugin);
+
+        const nodes = [
+          ["R", "R", "#555555"],
+          ["A", "1", "#326da8"],
+          ["B", "2", "#a85d20"],
+          ["C", "3", "#317d4b"],
+          ["A1", "1.1", "#326da8"],
+          ["A2", "1.2", "#326da8"],
+          ["B1", "2.1", "#a85d20"],
+          ["C1", "3.1", "#317d4b"],
+        ];
+        const edges = [
+          ["R", "A"],
+          ["R", "B"],
+          ["R", "C"],
+          ["A", "A1"],
+          ["A", "A2"],
+          ["B", "B1"],
+          ["C", "C1"],
+        ];
+        const cy = window.cytoscape({
+          container: document.querySelector("#graph"),
+          elements: [
+            ...nodes.map(([id, label, color], order) => ({
+              data: { id, label, color, order },
+            })),
+            ...edges.map(([source, target], order) => ({
+              data: { id: `${source}-${target}`, source, target, order },
+            })),
+          ],
+          layout: {
+            name: "dagre",
+            padding: 24,
+            sort: mode === "sorted"
+              ? (first, second) => first.data("order") - second.data("order")
+              : undefined,
+          },
+          userZoomingEnabled: false,
+          userPanningEnabled: false,
+          autoungrabify: true,
+          style: [
+            {
+              selector: "node",
+              style: {
+                width: 20,
+                height: 20,
+                label: "data(label)",
+                "font-size": 16,
+                "text-valign": "bottom",
+                "text-margin-y": 6,
+                "background-color": "data(color)",
+              },
+            },
+            {
+              selector: "edge",
+              style: {
+                width: 1,
+                "curve-style": "straight",
+                "target-arrow-shape": "triangle",
+                "line-color": "#888",
+                "target-arrow-color": "#888",
+              },
+            },
+          ],
+        });
+        window.addEventListener("resize", () => {
+          cy.resize();
+          cy.fit(cy.elements(), 24);
+        });
+        message.hidden = true;
+      }
+
+      showGraph().catch(() => {
+        message.textContent =
+          "Could not load the graph. Check your internet connection and reload.";
+      });
+    </script>
+  </body>
+</html>

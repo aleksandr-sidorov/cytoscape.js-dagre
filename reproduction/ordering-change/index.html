@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Horizontal ordering changes in cytoscape-dagre</title>
+    <link rel="icon" href="data:," />
+    <style>
+      body {
+        margin: 32px auto;
+        padding: 0 24px;
+        max-width: 1200px;
+        font: 16px system-ui, sans-serif;
+        color: #222;
+      }
+
+      h1 {
+        font-size: 28px;
+        overflow-wrap: anywhere;
+      }
+
+      p {
+        color: #555;
+        line-height: 1.5;
+      }
+
+      main {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+        margin: 24px 0;
+      }
+
+      iframe {
+        width: 100%;
+        height: 360px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-sizing: border-box;
+      }
+
+      @media (max-width: 900px) {
+        main {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Horizontal ordering changes in cytoscape-dagre</h1>
+    <p>Same graph, same Cytoscape version, different layout plugin versions.</p>
+    <main>
+      <iframe title="2.5.0 — default" src="panel.html?mode=legacy"></iframe>
+      <iframe title="4.0.1 — default" src="panel.html?mode=current"></iframe>
+      <iframe title="4.0.1 — explicit input sorting" src="panel.html?mode=sorted"></iframe>
+    </main>
+    <p>
+      Input sorting fixes the order passed to Dagre, not the final left-to-right
+      positions.
+    </p>
+    <p>
+      <a href="https://github.com/aleksandr-sidorov/cytoscape.js-dagre/tree/reproduce-ordering-change/reproduction/ordering-change">Source</a>
+    </p>
+  </body>
+</html>
